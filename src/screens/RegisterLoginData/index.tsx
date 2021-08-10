@@ -47,12 +47,21 @@ export function RegisterLoginData() {
       const newLoginData = {
         id: String(uuid.v4()),
         ...formData
-      }
+      };
   
       const dataKey = '@savepass:logins';
 
-      await AsyncStorage.setItem(dataKey, JSON.stringify(newLoginData))
+      const response = await AsyncStorage.getItem(dataKey);
+
+      const dataStoraged = response ? JSON.parse(response) : [];
+
+      await AsyncStorage.setItem(
+        dataKey, 
+        JSON.stringify([...dataStoraged, newLoginData])
+      );
+
       reset();
+      navigate('Home');
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível realizar o cadastro.')
     }
